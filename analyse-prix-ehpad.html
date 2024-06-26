@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.336">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kanto Fiaferana">
+
+<title>Analyse du prix des EHPAD</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="analyse-prix-ehpad_files/libs/clipboard/clipboard.min.js"></script>
+<script src="analyse-prix-ehpad_files/libs/quarto-html/quarto.js"></script>
+<script src="analyse-prix-ehpad_files/libs/quarto-html/popper.min.js"></script>
+<script src="analyse-prix-ehpad_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="analyse-prix-ehpad_files/libs/quarto-html/anchor.min.js"></script>
+<link href="analyse-prix-ehpad_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="analyse-prix-ehpad_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="analyse-prix-ehpad_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="analyse-prix-ehpad_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="analyse-prix-ehpad_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+<script src="analyse-prix-ehpad_files/libs/core-js-2.5.3/shim.min.js"></script>
+<script src="analyse-prix-ehpad_files/libs/react-17.0.0/react.min.js"></script>
+<script src="analyse-prix-ehpad_files/libs/react-17.0.0/react-dom.min.js"></script>
+<script src="analyse-prix-ehpad_files/libs/reactwidget-1.0.0/react-tools.js"></script>
+<script src="analyse-prix-ehpad_files/libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="analyse-prix-ehpad_files/libs/reactable-0.4.4/reactable.css" rel="stylesheet">
+<script src="analyse-prix-ehpad_files/libs/reactable-binding-0.4.4/reactable.js"></script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Analyse du prix des EHPAD</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kanto Fiaferana </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Questions auxquelles je souhaiterais répondre
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>“Les personnes âgées préfèrent passer leur retraite dans le sud de la France” : cette opinion est-elle reflétée par des prix d’hébergement plus élevés dans le sud du pays ?</p>
+<ul>
+<li>J’aurais utilisé la mesure du prix moyen par département dans une représentation cartographique de la France, avec une échelle continue de couleur (le plus foncé, le plus cher), plutôt qu’un tableau comme je l’ai fait plus bas.</li>
+<li>“Idéalement”, le sud de la métropole serait plus foncé.</li>
+</ul></li>
+<li><p>Plus généralement, mesurer l’impact des inégalités géographiques sur le prix des EHPAD :</p>
+<ul>
+<li>Métropole v Outre-mer</li>
+<li>Densité d’EHPAD au niveau du département/région</li>
+<li>Eloignement depuis les grandes communes</li>
+</ul></li>
+<li><p>Ecart des prix en fonction des options tarifères</p></li>
+<li><p>L’ancienneté d’un établissement a-t-elle un impact sur le prix de l’hébergement ?</p></li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>prix_ehpad_2023 <span class="ot">&lt;-</span> arrow<span class="sc">::</span><span class="fu">read_parquet</span>(<span class="st">"prix_ehpad_2023.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Au 31 décembre 2023, le prix moyen en France d’un hébergement permanent en chambre seule dans les établissements d’hébergement pour personnes âgées dépendantes (EHPAD) était de 73.87€ par jour (pour un minimum de 34.5€ et un maximum de 238€ par jour), tandis que le tarif de 50% des EHPAD était inférieur à 66.48€.</p>
+<p>Toutefois, quand on décompose ces prix par département, on observe que la dispersion n’est pas la même : les départements de Paris, des Hauts-de-Seine, des Yvelines, de Guadeloupe et des Alpes-Maritime chargent le plus par jour en moyenne pour leurs hébergements en chambre seule. À l’inverse, le Cantal, l’Aveyron, la Lozère, la Haute-Saône et la Meuse ont les moyennes de prix les plus faibles pour leurs chambres seules.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>prix_ehpad_dept <span class="ot">&lt;-</span> prix_ehpad_2023 <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(prix_heb_perm_cs)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(libdepartement) <span class="sc">|&gt;</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(prix_heb_perm_cs, </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">list</span>(<span class="at">moy =</span> mean, <span class="at">med =</span> median, <span class="at">min =</span> min, <span class="at">max =</span> max),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.names =</span> <span class="st">"{.fn}"</span>))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>prix_ehpad_dept <span class="sc">|&gt;</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>(<span class="at">id =</span> <span class="st">"ehpad_dept"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_currency</span>(<span class="at">currency =</span> <span class="st">"EUR"</span>, <span class="at">placement =</span> <span class="st">"right"</span>, <span class="at">incl_space =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">libdepartement =</span> <span class="fu">md</span>(<span class="st">"**Département**"</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">moy =</span> <span class="fu">md</span>(<span class="st">"**Prix moyen**"</span>),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">med =</span> <span class="fu">md</span>(<span class="st">"**Prix médian**"</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">min =</span> <span class="fu">md</span>(<span class="st">"**Prix minimum**"</span>),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">max =</span> <span class="fu">md</span>(<span class="st">"**Prix maximum**"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Répartition du prix quotidien des hébergements permanents en chambre seule dans les EHPAD, par département"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="fu">md</span>(<span class="st">"_Données au 31 décembre 2023_"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_interactive</span>(</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">use_filters =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">use_compact_mode =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">use_page_size_select =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">page_size_default =</span> <span class="dv">15</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">pagination_type =</span> <span class="st">"jump"</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_css</span>(</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">css =</span> <span class="st">"#ehpad_dept {font-size:small};"</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="ehpad_dept" class=".gt_table" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ehpad_dept table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ehpad_dept thead, #ehpad_dept tbody, #ehpad_dept tfoot, #ehpad_dept tr, #ehpad_dept td, #ehpad_dept th {
+  border-style: none;
+}
+
+#ehpad_dept p {
+  margin: 0;
+  padding: 0;
+}
+
+#ehpad_dept .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ehpad_dept .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ehpad_dept .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ehpad_dept .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ehpad_dept .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ehpad_dept .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ehpad_dept .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ehpad_dept .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ehpad_dept .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ehpad_dept .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ehpad_dept .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ehpad_dept .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ehpad_dept .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ehpad_dept .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ehpad_dept .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ehpad_dept .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ehpad_dept .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ehpad_dept .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ehpad_dept .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ehpad_dept .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ehpad_dept .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ehpad_dept .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ehpad_dept .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ehpad_dept .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ehpad_dept .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ehpad_dept .gt_left {
+  text-align: left;
+}
+
+#ehpad_dept .gt_center {
+  text-align: center;
+}
+
+#ehpad_dept .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ehpad_dept .gt_font_normal {
+  font-weight: normal;
+}
+
+#ehpad_dept .gt_font_bold {
+  font-weight: bold;
+}
+
+#ehpad_dept .gt_font_italic {
+  font-style: italic;
+}
+
+#ehpad_dept .gt_super {
+  font-size: 65%;
+}
+
+#ehpad_dept .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ehpad_dept .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ehpad_dept .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ehpad_dept .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ehpad_dept .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ehpad_dept .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ehpad_dept .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ehpad_dept {
+  font-size: small;
+}
+</style>
+<div style="font-family:system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;border-top-style:solid;border-top-width:2px;border-top-color:#D3D3D3;">
+<div class="gt_heading gt_title gt_font_normal" style="text-size:bigger;">Répartition du prix quotidien des hébergements permanents en chambre seule dans les EHPAD, par département</div>
+<div class="gt_heading gt_subtitle "><em>Données au 31 décembre 2023</em></div>
+</div>
+<div id="ehpad_dept" class="reactable html-widget " style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="ehpad_dept">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"libdepartement":["Ain","Aisne","Allier","Alpes De Haute Provence","Alpes Maritimes","Ardeche","Ardennes","Ariege","Aube","Aude","Aveyron","Bas Rhin","Bouches Du Rhone","Calvados","Cantal","Charente","Charente Maritime","Cher","Correze","Corse Du Sud","Cote D Or","Cotes D Armor","Creuse","Deux Sevres","Dordogne","Doubs","Drome","Essonne","Eure","Eure Et Loir","Finistere","Gard","Gers","Gironde","Guadeloupe","Guyane","Haut Rhin","Haute Corse","Haute Garonne","Haute Loire","Haute Marne","Haute Saone","Haute Savoie","Haute Vienne","Hautes Alpes","Hautes Pyrenees","Hauts De Seine","Herault","Ille Et Vilaine","Indre","Indre Et Loire","Isere","Jura","La Reunion","Landes","Loir Et Cher","Loire","Loire Atlantique","Loiret","Lot","Lot Et Garonne","Lozere","Maine Et Loire","Manche","Marne","Martinique","Mayenne","Meurthe Et Moselle","Meuse","Morbihan","Moselle","Nievre","Nord","Oise","Orne","Paris","Pas De Calais","Puy De Dome","Pyrenees Atlantiques","Pyrenees Orientales","Rhone","Saint Pierre Et Miquelon","Saone Et Loire","Sarthe","Savoie","Seine Et Marne","Seine Maritime","Seine Saint Denis","Somme","Tarn","Tarn Et Garonne","Territoire De Belfort","Val D Oise","Val De Marne","Var","Vaucluse","Vendee","Vienne","Vosges","Yonne","Yvelines"],"moy":[71.2933846153846,73.1379032258065,63.6710256410256,71.2406666666667,95.3671052631579,61.8896721311475,67.2522580645161,69.2489473684211,71.030243902439,67.7059574468085,57.63828125,65.5720202020202,86.3130057803468,78.4258108108108,56.6668421052632,66.3435714285714,78.133119266055,66.0538461538462,63.5095121951219,82.44,77.451095890411,62.037032967033,59.6303333333333,64.517037037037,66.82515625,71.0751162790698,75.4943396226415,92.5775531914894,77.5102272727273,69.4239534883721,60.4275,70.5870886075949,63.6915151515152,81.866884057971,104.9475,84.095,66.8605882352941,76.6254545454545,81.2939837398374,60.3421621621622,59.8004347826087,58.6951724137931,80.6343636363636,63.434,66.2134782608696,67.4705882352941,118.617647058824,76.6280714285714,66.9130303030303,62.1228947368421,77.0161818181818,70.7894623655914,69.3877142857143,81.4992857142857,60.8079545454545,71.6090697674419,64.2448453608247,67.4884971098266,77.5491379310345,65.7433333333333,69.6268085106383,58.0224,68.7151785714286,65.1246052631579,75.7165217391304,77.903,61.21,68.2259090909091,58.9973333333333,66.4863636363636,66.1693406593407,69.44,72.6962019230769,76.1691666666667,66.9381818181818,125.00140625,68.6124615384615,66.4857471264368,68.353619047619,70.5867391304348,88.0721014492754,60,69.7955952380952,69.3950724637681,71.5140816326531,86.4961111111111,72.484375,92.29625,65.1738095238095,64.0394642857143,63.5793333333333,70.7633333333333,91.579552238806,91.7367741935484,82.1886111111111,72.0798113207547,64.3747008547009,75.1044117647059,61.3201724137931,68.8977941176471,106.507283950617],"med":[63.1,70.18,56.83,67.655,97.1,57.8,65.02,68.01,71.77,64.09,56.895,64.48,86,78.255,56.61,63.2,78,64.63,62.06,82.85,72.88,60.74,58.88,60.81,59.815,69.42,70.44,90.64,65.57,62.14,59.815,67.12,62.38,77.035,103.885,84.095,64.675,75.9,76.34,60.59,56.93,58.73,72.57,62.175,63.03,64.835,120.155,72.695,64.58,62.77,66.85,68.6,64.55,76.28,60.66,63.55,59.09,63.17,66.865,65.575,63.25,58.07,66.67,61.405,70.385,77.03,58.5,66.85,56.99,64.82,62.73,65.665,68.9,69.17,63.02,104.63,65.36,62.54,60.72,67.395,76.81,60,65.445,62.15,66.81,84.4,65.32,87,60.59,61.865,63.625,71.11,90,78.27,80.99,65.07,60.33,74.17,59.89,64.02,109],"min":[48.31,55.87,51.6,55.09,57.25,48.47,54.16,62.85,52.14,55.68,44.38,54.56,60.65,46.41,48.22,45.92,56.1,54.9,48.69,57.93,53.52,52.31,48.33,51.37,53.08,53.54,58.56,63.8,56.43,51.08,52.5,56.6,49.59,49.61,90.5,78.87,54.17,60.88,57.89,52.69,46.95,50.33,61.93,55.39,50.72,53.62,75.7,59.25,54.94,49.49,55.01,42.5,55.29,68.14,48.9,53.27,50.94,50.93,53.83,48.49,50.99,52.03,54.79,52.48,52.63,67.71,52.76,34.5,50.26,52.86,51.43,56,46.27,50.51,52.31,79.82,54.12,48.31,54.09,58.53,59.7,60,45.59,49,53.79,58.38,53.3,70.04,54.91,50.12,56.3,56.9,56.61,68.97,54.84,52.49,51.09,58.14,48.98,54.44,68.39],"max":[133.5,109.12,98,92,184,115,99.65,91,113,94,68.88,102.3,151,119,85,97,124.4,100.9,121,96.31,115.5,103,72.56,93.5,114,114,115,130,112.5,112,108,108,81,144.9,121.86,89.32,97.5,88.4,123,67.48,77.93,94.5,140,105.5,99,94.5,224,143,135,85,119,141.5,114,110,69.21,117.3,106,128,133.9,96.5,98,64.22,127.1,114,123,90.97,102,105,82.53,129,110,112,128,123.5,100.5,238,112,115,135,99,155,60,107,121.9,128.5,160,117,146,117.5,93,81,81.12,142,155,116,110.6,134.3,106,96.5,110.9,184.5]},"columns":[{"id":"libdepartement","name":"<strong>Département<\/strong>","type":"character","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\n}","cell":["Ain","Aisne","Allier","Alpes De Haute Provence","Alpes Maritimes","Ardeche","Ardennes","Ariege","Aube","Aude","Aveyron","Bas Rhin","Bouches Du Rhone","Calvados","Cantal","Charente","Charente Maritime","Cher","Correze","Corse Du Sud","Cote D Or","Cotes D Armor","Creuse","Deux Sevres","Dordogne","Doubs","Drome","Essonne","Eure","Eure Et Loir","Finistere","Gard","Gers","Gironde","Guadeloupe","Guyane","Haut Rhin","Haute Corse","Haute Garonne","Haute Loire","Haute Marne","Haute Saone","Haute Savoie","Haute Vienne","Hautes Alpes","Hautes Pyrenees","Hauts De Seine","Herault","Ille Et Vilaine","Indre","Indre Et Loire","Isere","Jura","La Reunion","Landes","Loir Et Cher","Loire","Loire Atlantique","Loiret","Lot","Lot Et Garonne","Lozere","Maine Et Loire","Manche","Marne","Martinique","Mayenne","Meurthe Et Moselle","Meuse","Morbihan","Moselle","Nievre","Nord","Oise","Orne","Paris","Pas De Calais","Puy De Dome","Pyrenees Atlantiques","Pyrenees Orientales","Rhone","Saint Pierre Et Miquelon","Saone Et Loire","Sarthe","Savoie","Seine Et Marne","Seine Maritime","Seine Saint Denis","Somme","Tarn","Tarn Et Garonne","Territoire De Belfort","Val D Oise","Val De Marne","Var","Vaucluse","Vendee","Vienne","Vosges","Yonne","Yvelines"],"html":true,"align":"left","headerStyle":{"font-weight":"normal"}},{"id":"moy","name":"<strong>Prix moyen<\/strong>","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\n}","cell":["71.29 &#8364;","73.14 &#8364;","63.67 &#8364;","71.24 &#8364;","95.37 &#8364;","61.89 &#8364;","67.25 &#8364;","69.25 &#8364;","71.03 &#8364;","67.71 &#8364;","57.64 &#8364;","65.57 &#8364;","86.31 &#8364;","78.43 &#8364;","56.67 &#8364;","66.34 &#8364;","78.13 &#8364;","66.05 &#8364;","63.51 &#8364;","82.44 &#8364;","77.45 &#8364;","62.04 &#8364;","59.63 &#8364;","64.52 &#8364;","66.83 &#8364;","71.08 &#8364;","75.49 &#8364;","92.58 &#8364;","77.51 &#8364;","69.42 &#8364;","60.43 &#8364;","70.59 &#8364;","63.69 &#8364;","81.87 &#8364;","104.95 &#8364;","84.09 &#8364;","66.86 &#8364;","76.63 &#8364;","81.29 &#8364;","60.34 &#8364;","59.80 &#8364;","58.70 &#8364;","80.63 &#8364;","63.43 &#8364;","66.21 &#8364;","67.47 &#8364;","118.62 &#8364;","76.63 &#8364;","66.91 &#8364;","62.12 &#8364;","77.02 &#8364;","70.79 &#8364;","69.39 &#8364;","81.50 &#8364;","60.81 &#8364;","71.61 &#8364;","64.24 &#8364;","67.49 &#8364;","77.55 &#8364;","65.74 &#8364;","69.63 &#8364;","58.02 &#8364;","68.72 &#8364;","65.12 &#8364;","75.72 &#8364;","77.90 &#8364;","61.21 &#8364;","68.23 &#8364;","59.00 &#8364;","66.49 &#8364;","66.17 &#8364;","69.44 &#8364;","72.70 &#8364;","76.17 &#8364;","66.94 &#8364;","125.00 &#8364;","68.61 &#8364;","66.49 &#8364;","68.35 &#8364;","70.59 &#8364;","88.07 &#8364;","60.00 &#8364;","69.80 &#8364;","69.40 &#8364;","71.51 &#8364;","86.50 &#8364;","72.48 &#8364;","92.30 &#8364;","65.17 &#8364;","64.04 &#8364;","63.58 &#8364;","70.76 &#8364;","91.58 &#8364;","91.74 &#8364;","82.19 &#8364;","72.08 &#8364;","64.37 &#8364;","75.10 &#8364;","61.32 &#8364;","68.90 &#8364;","106.51 &#8364;"],"html":true,"align":"right","headerStyle":{"font-weight":"normal"}},{"id":"med","name":"<strong>Prix médian<\/strong>","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\n}","cell":["63.10 &#8364;","70.18 &#8364;","56.83 &#8364;","67.66 &#8364;","97.10 &#8364;","57.80 &#8364;","65.02 &#8364;","68.01 &#8364;","71.77 &#8364;","64.09 &#8364;","56.89 &#8364;","64.48 &#8364;","86.00 &#8364;","78.25 &#8364;","56.61 &#8364;","63.20 &#8364;","78.00 &#8364;","64.63 &#8364;","62.06 &#8364;","82.85 &#8364;","72.88 &#8364;","60.74 &#8364;","58.88 &#8364;","60.81 &#8364;","59.81 &#8364;","69.42 &#8364;","70.44 &#8364;","90.64 &#8364;","65.57 &#8364;","62.14 &#8364;","59.81 &#8364;","67.12 &#8364;","62.38 &#8364;","77.03 &#8364;","103.89 &#8364;","84.09 &#8364;","64.68 &#8364;","75.90 &#8364;","76.34 &#8364;","60.59 &#8364;","56.93 &#8364;","58.73 &#8364;","72.57 &#8364;","62.17 &#8364;","63.03 &#8364;","64.84 &#8364;","120.16 &#8364;","72.69 &#8364;","64.58 &#8364;","62.77 &#8364;","66.85 &#8364;","68.60 &#8364;","64.55 &#8364;","76.28 &#8364;","60.66 &#8364;","63.55 &#8364;","59.09 &#8364;","63.17 &#8364;","66.87 &#8364;","65.57 &#8364;","63.25 &#8364;","58.07 &#8364;","66.67 &#8364;","61.41 &#8364;","70.38 &#8364;","77.03 &#8364;","58.50 &#8364;","66.85 &#8364;","56.99 &#8364;","64.82 &#8364;","62.73 &#8364;","65.66 &#8364;","68.90 &#8364;","69.17 &#8364;","63.02 &#8364;","104.63 &#8364;","65.36 &#8364;","62.54 &#8364;","60.72 &#8364;","67.39 &#8364;","76.81 &#8364;","60.00 &#8364;","65.44 &#8364;","62.15 &#8364;","66.81 &#8364;","84.40 &#8364;","65.32 &#8364;","87.00 &#8364;","60.59 &#8364;","61.87 &#8364;","63.62 &#8364;","71.11 &#8364;","90.00 &#8364;","78.27 &#8364;","80.99 &#8364;","65.07 &#8364;","60.33 &#8364;","74.17 &#8364;","59.89 &#8364;","64.02 &#8364;","109.00 &#8364;"],"html":true,"align":"right","headerStyle":{"font-weight":"normal"}},{"id":"min","name":"<strong>Prix minimum<\/strong>","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\n}","cell":["48.31 &#8364;","55.87 &#8364;","51.60 &#8364;","55.09 &#8364;","57.25 &#8364;","48.47 &#8364;","54.16 &#8364;","62.85 &#8364;","52.14 &#8364;","55.68 &#8364;","44.38 &#8364;","54.56 &#8364;","60.65 &#8364;","46.41 &#8364;","48.22 &#8364;","45.92 &#8364;","56.10 &#8364;","54.90 &#8364;","48.69 &#8364;","57.93 &#8364;","53.52 &#8364;","52.31 &#8364;","48.33 &#8364;","51.37 &#8364;","53.08 &#8364;","53.54 &#8364;","58.56 &#8364;","63.80 &#8364;","56.43 &#8364;","51.08 &#8364;","52.50 &#8364;","56.60 &#8364;","49.59 &#8364;","49.61 &#8364;","90.50 &#8364;","78.87 &#8364;","54.17 &#8364;","60.88 &#8364;","57.89 &#8364;","52.69 &#8364;","46.95 &#8364;","50.33 &#8364;","61.93 &#8364;","55.39 &#8364;","50.72 &#8364;","53.62 &#8364;","75.70 &#8364;","59.25 &#8364;","54.94 &#8364;","49.49 &#8364;","55.01 &#8364;","42.50 &#8364;","55.29 &#8364;","68.14 &#8364;","48.90 &#8364;","53.27 &#8364;","50.94 &#8364;","50.93 &#8364;","53.83 &#8364;","48.49 &#8364;","50.99 &#8364;","52.03 &#8364;","54.79 &#8364;","52.48 &#8364;","52.63 &#8364;","67.71 &#8364;","52.76 &#8364;","34.50 &#8364;","50.26 &#8364;","52.86 &#8364;","51.43 &#8364;","56.00 &#8364;","46.27 &#8364;","50.51 &#8364;","52.31 &#8364;","79.82 &#8364;","54.12 &#8364;","48.31 &#8364;","54.09 &#8364;","58.53 &#8364;","59.70 &#8364;","60.00 &#8364;","45.59 &#8364;","49.00 &#8364;","53.79 &#8364;","58.38 &#8364;","53.30 &#8364;","70.04 &#8364;","54.91 &#8364;","50.12 &#8364;","56.30 &#8364;","56.90 &#8364;","56.61 &#8364;","68.97 &#8364;","54.84 &#8364;","52.49 &#8364;","51.09 &#8364;","58.14 &#8364;","48.98 &#8364;","54.44 &#8364;","68.39 &#8364;"],"html":true,"align":"right","headerStyle":{"font-weight":"normal"}},{"id":"max","name":"<strong>Prix maximum<\/strong>","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\n}","cell":["133.50 &#8364;","109.12 &#8364;","98.00 &#8364;","92.00 &#8364;","184.00 &#8364;","115.00 &#8364;","99.65 &#8364;","91.00 &#8364;","113.00 &#8364;","94.00 &#8364;","68.88 &#8364;","102.30 &#8364;","151.00 &#8364;","119.00 &#8364;","85.00 &#8364;","97.00 &#8364;","124.40 &#8364;","100.90 &#8364;","121.00 &#8364;","96.31 &#8364;","115.50 &#8364;","103.00 &#8364;","72.56 &#8364;","93.50 &#8364;","114.00 &#8364;","114.00 &#8364;","115.00 &#8364;","130.00 &#8364;","112.50 &#8364;","112.00 &#8364;","108.00 &#8364;","108.00 &#8364;","81.00 &#8364;","144.90 &#8364;","121.86 &#8364;","89.32 &#8364;","97.50 &#8364;","88.40 &#8364;","123.00 &#8364;","67.48 &#8364;","77.93 &#8364;","94.50 &#8364;","140.00 &#8364;","105.50 &#8364;","99.00 &#8364;","94.50 &#8364;","224.00 &#8364;","143.00 &#8364;","135.00 &#8364;","85.00 &#8364;","119.00 &#8364;","141.50 &#8364;","114.00 &#8364;","110.00 &#8364;","69.21 &#8364;","117.30 &#8364;","106.00 &#8364;","128.00 &#8364;","133.90 &#8364;","96.50 &#8364;","98.00 &#8364;","64.22 &#8364;","127.10 &#8364;","114.00 &#8364;","123.00 &#8364;","90.97 &#8364;","102.00 &#8364;","105.00 &#8364;","82.53 &#8364;","129.00 &#8364;","110.00 &#8364;","112.00 &#8364;","128.00 &#8364;","123.50 &#8364;","100.50 &#8364;","238.00 &#8364;","112.00 &#8364;","115.00 &#8364;","135.00 &#8364;","99.00 &#8364;","155.00 &#8364;","60.00 &#8364;","107.00 &#8364;","121.90 &#8364;","128.50 &#8364;","160.00 &#8364;","117.00 &#8364;","146.00 &#8364;","117.50 &#8364;","93.00 &#8364;","81.00 &#8364;","81.12 &#8364;","142.00 &#8364;","155.00 &#8364;","116.00 &#8364;","110.60 &#8364;","134.30 &#8364;","106.00 &#8364;","96.50 &#8364;","110.90 &#8364;","184.50 &#8364;"],"html":true,"align":"right","headerStyle":{"font-weight":"normal"}}],"filterable":true,"defaultPageSize":15,"showPageSizeOptions":true,"pageSizeOptions":[10,25,50,100],"paginationType":"jump","showPagination":true,"showPageInfo":true,"minRows":1,"compact":true,"showSortable":true,"height":"auto","theme":{"color":"#333333","backgroundColor":"#FFFFFF","stripedColor":"rgba(128,128,128,0.05)","style":{"fontFamily":"system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"},"headerStyle":{"borderTopStyle":"solid","borderTopWidth":"2px","borderTopColor":"#D3D3D3","borderBottomStyle":"solid","borderBottomWidth":"2px","borderBottomColor":"#D3D3D3"}},"elementId":"ehpad_dept","dataKey":"8c7dc795e97a616dbf24d08a39c691f6"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.0.style","tag.attribs.columns.1.style","tag.attribs.columns.2.style","tag.attribs.columns.3.style","tag.attribs.columns.4.style"],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<p>À première vue, les prix semblent suivre une répartition “standard”, avec des prix plus importants en Ile-de-France (7 des 8 départements d’IDF sont dans les 10 départements avec les prix moyens et médians les plus élevés).</p>
+<p>Par mode de fixation des tarifs (MFT) avec ou sans pharmacie à usage intérieur (PUI)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>prix_ehpad_mft <span class="ot">&lt;-</span> prix_ehpad_2023 <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(prix_heb_perm_cs)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(libmft) <span class="sc">|&gt;</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(prix_heb_perm_cs, </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">list</span>(<span class="at">moy =</span> mean, <span class="at">med =</span> median, <span class="at">min =</span> min, <span class="at">max =</span> max),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.names =</span> <span class="st">"{.fn}"</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>prix_ehpad_mft <span class="sc">|&gt;</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>(<span class="at">id =</span> <span class="st">"ehpad_mft"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_currency</span>(<span class="at">currency =</span> <span class="st">"EUR"</span>, <span class="at">placement =</span> <span class="st">"right"</span>, <span class="at">incl_space =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">libmft =</span> <span class="fu">md</span>(<span class="st">"**Département**"</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">moy =</span> <span class="fu">md</span>(<span class="st">"**Prix moyen**"</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">med =</span> <span class="fu">md</span>(<span class="st">"**Prix médian**"</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">min =</span> <span class="fu">md</span>(<span class="st">"**Prix minimum**"</span>),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">max =</span> <span class="fu">md</span>(<span class="st">"**Prix maximum**"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Répartition du prix quotidien des hébergements permanents en chambre seule dans les EHPAD, par mode de fixation des tarifs"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="fu">md</span>(<span class="st">"_Données au 31 décembre 2023_"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_interactive</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">use_filters =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">use_compact_mode =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">use_page_size_select =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">page_size_default =</span> <span class="dv">10</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">pagination_type =</span> <span class="st">"jump"</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_css</span>(</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">css =</span> <span class="st">"#ehpad_mft {font-size:small};"</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="ehpad_mft" class=".gt_table" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ehpad_mft table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ehpad_mft thead, #ehpad_mft tbody, #ehpad_mft tfoot, #ehpad_mft tr, #ehpad_mft td, #ehpad_mft th {
+  border-style: none;
+}
+
+#ehpad_mft p {
+  margin: 0;
+  padding: 0;
+}
+
+#ehpad_mft .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ehpad_mft .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ehpad_mft .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ehpad_mft .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ehpad_mft .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ehpad_mft .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ehpad_mft .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ehpad_mft .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ehpad_mft .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ehpad_mft .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ehpad_mft .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ehpad_mft .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ehpad_mft .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ehpad_mft .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ehpad_mft .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ehpad_mft .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ehpad_mft .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ehpad_mft .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ehpad_mft .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ehpad_mft .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ehpad_mft .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ehpad_mft .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ehpad_mft .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ehpad_mft .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ehpad_mft .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ehpad_mft .gt_left {
+  text-align: left;
+}
+
+#ehpad_mft .gt_center {
+  text-align: center;
+}
+
+#ehpad_mft .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ehpad_mft .gt_font_normal {
+  font-weight: normal;
+}
+
+#ehpad_mft .gt_font_bold {
+  font-weight: bold;
+}
+
+#ehpad_mft .gt_font_italic {
+  font-style: italic;
+}
+
+#ehpad_mft .gt_super {
+  font-size: 65%;
+}
+
+#ehpad_mft .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ehpad_mft .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ehpad_mft .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ehpad_mft .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ehpad_mft .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ehpad_mft .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ehpad_mft .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ehpad_mft {
+  font-size: small;
+}
+</style>
+<div style="font-family:system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;border-top-style:solid;border-top-width:2px;border-top-color:#D3D3D3;">
+<div class="gt_heading gt_title gt_font_normal" style="text-size:bigger;">Répartition du prix quotidien des hébergements permanents en chambre seule dans les EHPAD, par mode de fixation des tarifs</div>
+<div class="gt_heading gt_subtitle "><em>Données au 31 décembre 2023</em></div>
+</div>
+<div id="ehpad_mft" class="reactable html-widget " style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="ehpad_mft">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"libmft":["ARS établissements Publics de santé dotation globale","ARS/PCD, PUV, convention SSIAD, habilité à l'aide sociale","ARS/PCD, PUV, convention SSIAD, non habilité à l'aide social","ARS/PCD, PUV, forfait soins, habilité aide sociale","ARS/PCD, PUV, forfait soins, non habilité aide sociale","ARS/PCD, Tarif global, habilité aide sociale sans PUI","ARS/PCD, Tarif global, habilité aide sociale, recours PUI","ARS/PCD, Tarif global, non hab.aide sociale, recours PUI","ARS/PCD, Tarif global, non habilité aide sociale sans PUI","ARS/PCD, Tarif partiel, habilité aide sociale sans PUI","ARS/PCD, Tarif partiel, habilité aide sociale, recours PUI","ARS/PCD, Tarif partiel, non hab.aide sociale, recours PUI","ARS/PCD, Tarif partiel, non habilité aide sociale sans PUI","Indéterminé"],"moy":[63.78,54.12,56.71,57.54,75.6877777777778,70.9840345821326,62.2643526405451,94.31,97.796711409396,70.2204516560723,71.1990625,75.8,96.470404040404,89.425],"med":[63.78,51.64,56.71,59.13,75.7,65.86,61.56,95.68,97.3,65.36,61.585,75.8,94.4,89.425],"min":[63.78,42.5,45.92,49.59,52.86,46.27,44.38,60,56.19,45.38,34.5,73,48.98,58.85],"max":[63.78,63.54,67.5,63.9,90.94,151,121.86,133.5,190,210,177,78.6,238,120]},"columns":[{"id":"libmft","name":"<strong>Département<\/strong>","type":"character","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\n}","cell":["ARS établissements Publics de santé dotation globale","ARS/PCD, PUV, convention SSIAD, habilité à l'aide sociale","ARS/PCD, PUV, convention SSIAD, non habilité à l'aide social","ARS/PCD, PUV, forfait soins, habilité aide sociale","ARS/PCD, PUV, forfait soins, non habilité aide sociale","ARS/PCD, Tarif global, habilité aide sociale sans PUI","ARS/PCD, Tarif global, habilité aide sociale, recours PUI","ARS/PCD, Tarif global, non hab.aide sociale, recours PUI","ARS/PCD, Tarif global, non habilité aide sociale sans PUI","ARS/PCD, Tarif partiel, habilité aide sociale sans PUI","ARS/PCD, Tarif partiel, habilité aide sociale, recours PUI","ARS/PCD, Tarif partiel, non hab.aide sociale, recours PUI","ARS/PCD, Tarif partiel, non habilité aide sociale sans PUI","Indéterminé"],"html":true,"align":"left","headerStyle":{"font-weight":"normal"}},{"id":"moy","name":"<strong>Prix moyen<\/strong>","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\n}","cell":["63.78 &#8364;","54.12 &#8364;","56.71 &#8364;","57.54 &#8364;","75.69 &#8364;","70.98 &#8364;","62.26 &#8364;","94.31 &#8364;","97.80 &#8364;","70.22 &#8364;","71.20 &#8364;","75.80 &#8364;","96.47 &#8364;","89.42 &#8364;"],"html":true,"align":"right","headerStyle":{"font-weight":"normal"}},{"id":"med","name":"<strong>Prix médian<\/strong>","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\n}","cell":["63.78 &#8364;","51.64 &#8364;","56.71 &#8364;","59.13 &#8364;","75.70 &#8364;","65.86 &#8364;","61.56 &#8364;","95.68 &#8364;","97.30 &#8364;","65.36 &#8364;","61.59 &#8364;","75.80 &#8364;","94.40 &#8364;","89.42 &#8364;"],"html":true,"align":"right","headerStyle":{"font-weight":"normal"}},{"id":"min","name":"<strong>Prix minimum<\/strong>","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\n}","cell":["63.78 &#8364;","42.50 &#8364;","45.92 &#8364;","49.59 &#8364;","52.86 &#8364;","46.27 &#8364;","44.38 &#8364;","60.00 &#8364;","56.19 &#8364;","45.38 &#8364;","34.50 &#8364;","73.00 &#8364;","48.98 &#8364;","58.85 &#8364;"],"html":true,"align":"right","headerStyle":{"font-weight":"normal"}},{"id":"max","name":"<strong>Prix maximum<\/strong>","type":"numeric","style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\n}","cell":["63.78 &#8364;","63.54 &#8364;","67.50 &#8364;","63.90 &#8364;","90.94 &#8364;","151.00 &#8364;","121.86 &#8364;","133.50 &#8364;","190.00 &#8364;","210.00 &#8364;","177.00 &#8364;","78.60 &#8364;","238.00 &#8364;","120.00 &#8364;"],"html":true,"align":"right","headerStyle":{"font-weight":"normal"}}],"filterable":true,"defaultPageSize":10,"showPageSizeOptions":true,"pageSizeOptions":[10,25,50,100],"paginationType":"jump","showPagination":true,"showPageInfo":true,"minRows":1,"compact":true,"showSortable":true,"height":"auto","theme":{"color":"#333333","backgroundColor":"#FFFFFF","stripedColor":"rgba(128,128,128,0.05)","style":{"fontFamily":"system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"},"headerStyle":{"borderTopStyle":"solid","borderTopWidth":"2px","borderTopColor":"#D3D3D3","borderBottomStyle":"solid","borderBottomWidth":"2px","borderBottomColor":"#D3D3D3"}},"elementId":"ehpad_mft","dataKey":"7f9412d24d9d6810d81405ea67772330"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.0.style","tag.attribs.columns.1.style","tag.attribs.columns.2.style","tag.attribs.columns.3.style","tag.attribs.columns.4.style"],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Mes priorités avec plus de temps
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

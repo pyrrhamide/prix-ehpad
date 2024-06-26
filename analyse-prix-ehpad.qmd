@@ -1,0 +1,106 @@
+---
+title: "Analyse du prix des EHPAD"
+author: "Kanto Fiaferana"
+format: html
+editor: visual
+---
+
+:::{.callout-note}
+## Questions auxquelles je souhaiterais répondre
+
+* "Les personnes âgées préfèrent passer leur retraite dans le sud de la France" : cette opinion est-elle reflétée par des prix d'hébergement plus élevés dans le sud du pays ? 
+  * J'aurais utilisé la mesure du prix moyen par département dans une représentation cartographique de la France, avec une échelle continue de couleur (le plus foncé, le plus cher), plutôt qu'un tableau comme je l'ai fait plus bas. 
+  * "Idéalement", le sud de la métropole serait plus foncé.
+  
+* Plus généralement, mesurer l'impact des inégalités géographiques sur le prix des EHPAD :
+  * Métropole v Outre-mer
+  * Densité d'EHPAD au niveau du département/région 
+  * Eloignement depuis les grandes communes 
+  
+* Ecart des prix en fonction des options tarifères
+
+* L'ancienneté d'un établissement a-t-elle un impact sur le prix de l'hébergement ? 
+:::
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(gt)
+
+prix_ehpad_2023 <- arrow::read_parquet("prix_ehpad_2023.parquet")
+```
+
+Au 31 décembre 2023, le prix moyen en France d'un hébergement permanent en chambre seule dans les établissements d'hébergement pour personnes âgées dépendantes (EHPAD) était de `r round(mean(prix_ehpad_2023$prix_heb_perm_cs, na.rm = T),2)`€ par jour (pour un minimum de `r round(min(prix_ehpad_2023$prix_heb_perm_cs, na.rm = T),2)`€ et un maximum de `r round(max(prix_ehpad_2023$prix_heb_perm_cs, na.rm = T), 2)`€ par jour), tandis que le tarif de 50% des EHPAD était inférieur à `r round(median(prix_ehpad_2023$prix_heb_perm_cs, na.rm = T),2)`€.
+
+Toutefois, quand on décompose ces prix par département, on observe que la dispersion n'est pas la même : les départements de Paris, des Hauts-de-Seine, des Yvelines, de Guadeloupe et des Alpes-Maritime chargent le plus par jour en moyenne pour leurs hébergements en chambre seule. À l'inverse, le Cantal, l'Aveyron, la Lozère, la Haute-Saône et la Meuse ont les moyennes de prix les plus faibles pour leurs chambres seules.
+
+```{r}
+prix_ehpad_dept <- prix_ehpad_2023 |> 
+  filter(!is.na(prix_heb_perm_cs)) |> 
+  group_by(libdepartement) |> 
+  summarise(across(prix_heb_perm_cs, 
+                   list(moy = mean, med = median, min = min, max = max),
+                   .names = "{.fn}"))
+
+prix_ehpad_dept |> 
+  gt(id = "ehpad_dept") |> 
+  fmt_currency(currency = "EUR", placement = "right", incl_space = TRUE) |> 
+  cols_label(libdepartement = md("**Département**"),
+             moy = md("**Prix moyen**"),
+             med = md("**Prix médian**"),
+             min = md("**Prix minimum**"),
+             max = md("**Prix maximum**")) |> 
+  tab_header(title = "Répartition du prix quotidien des hébergements permanents en chambre seule dans les EHPAD, par département",
+             subtitle = md("_Données au 31 décembre 2023_")) |> 
+  opt_interactive(
+    use_filters = TRUE,
+      use_compact_mode = TRUE,
+      use_page_size_select = TRUE,
+      page_size_default = 15,
+      pagination_type = "jump"
+  ) |> 
+  opt_css(
+        css = "#ehpad_dept {font-size:small};"
+      )
+```
+
+À première vue, les prix semblent suivre une répartition "standard", avec des prix plus importants en Ile-de-France (7 des 8 départements d'IDF sont dans les 10 départements avec les prix moyens et médians les plus élevés).
+
+Par mode de fixation des tarifs (MFT) avec ou sans pharmacie à usage intérieur (PUI)
+
+```{r}
+prix_ehpad_mft <- prix_ehpad_2023 |> 
+  filter(!is.na(prix_heb_perm_cs)) |> 
+  group_by(libmft) |> 
+  summarise(across(prix_heb_perm_cs, 
+                   list(moy = mean, med = median, min = min, max = max),
+                   .names = "{.fn}"))
+
+prix_ehpad_mft |> 
+  gt(id = "ehpad_mft") |> 
+  fmt_currency(currency = "EUR", placement = "right", incl_space = TRUE) |> 
+  cols_label(libmft = md("**Département**"),
+             moy = md("**Prix moyen**"),
+             med = md("**Prix médian**"),
+             min = md("**Prix minimum**"),
+             max = md("**Prix maximum**")) |> 
+  tab_header(title = "Répartition du prix quotidien des hébergements permanents en chambre seule dans les EHPAD, par mode de fixation des tarifs",
+             subtitle = md("_Données au 31 décembre 2023_")) |> 
+  opt_interactive(
+    use_filters = TRUE,
+      use_compact_mode = TRUE,
+      use_page_size_select = TRUE,
+      page_size_default = 10,
+      pagination_type = "jump"
+  ) |> 
+  opt_css(
+        css = "#ehpad_mft {font-size:small};"
+      )
+```
+
+:::{.callout-note}
+## Mes priorités avec plus de temps 
+:::
